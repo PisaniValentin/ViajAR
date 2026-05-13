@@ -1,4 +1,4 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -13,7 +13,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Asegurarnos de que la tabla existe (Ideal para prototipos rápidos)
+    // Iniciamos la conexión a la base de datos usando la variable de entorno
+    // El "!" le dice a TypeScript que estamos seguros de que la variable existe
+    const sql = neon(process.env.DATABASE_URL!);
+
+    // Asegurarnos de que la tabla existe
     await sql`
       CREATE TABLE IF NOT EXISTS feedbacks (
         id SERIAL PRIMARY KEY,
