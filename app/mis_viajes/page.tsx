@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowLeft,
   MapPin,
@@ -13,15 +14,27 @@ import {
   Loader2,
   Plane,
   Car,
+  Home,
+  Route,
+  Heart,
+  User,
+  Search,
 } from "lucide-react";
 
 interface TramoActivoProps {
   icon: React.ReactNode;
   titulo: string;
   desc: string;
-  done?: boolean; // El '?' indica que es una propiedad opcional
+  done?: boolean;
   active?: boolean;
   last?: boolean;
+}
+
+interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  href: string;
+  active?: boolean;
 }
 
 export default function ViajeActivoPage() {
@@ -30,7 +43,6 @@ export default function ViajeActivoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Función para enviar a nuestra API (que crearemos en el paso 2)
   const handleSubmitFeedback = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -44,7 +56,7 @@ export default function ViajeActivoPage() {
 
       if (response.ok) {
         setIsSuccess(true);
-        setTimeout(() => setShowModal(false), 2000); // Cierra el modal tras 2 seg
+        setTimeout(() => setShowModal(false), 2000);
       } else {
         alert("Hubo un error al enviar el feedback. Intentá de nuevo.");
       }
@@ -57,10 +69,10 @@ export default function ViajeActivoPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-50 min-h-screen pb-24 font-sans text-slate-800 relative">
+    <div className=" bg-gray-50 min-h-screen pb-24 font-sans text-slate-800 relative">
       {/* HEADER */}
-      <header className="flex items-center p-4 bg-white shadow-sm gap-4">
-        <Link href="/demo">
+      <header className="flex items-center p-4 bg-white shadow-sm gap-4 relative z-20">
+        <Link href="/buscar">
           <ArrowLeft className="w-6 h-6 text-slate-600" />
         </Link>
         <div>
@@ -95,13 +107,13 @@ export default function ViajeActivoPage() {
               icon={<Plane className="w-4 h-4" />}
               titulo="Vuelo Directo"
               desc="Hacia Aeropuerto BRC"
-              active
+              done
             />
             <TramoActivo
               icon={<Car className="w-4 h-4" />}
               titulo="Taxi"
               desc="Hacia Centro Cívico"
-              last
+              active
             />
           </div>
         </section>
@@ -196,39 +208,57 @@ export default function ViajeActivoPage() {
           </div>
         </div>
       )}
+
+      {/* NAV BAR INFERIOR */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
+        <NavItem icon={<Home />} label="Inicio" href="/" />
+        <NavItem icon={<Search />} label="Buscar" href="/buscar" />
+        <NavItem icon={<Route />} label="Mis Viajes" href="/mis_viajes" />
+        <NavItem icon={<Heart />} label="Favoritos" href="/favoritos" />
+        <NavItem icon={<User />} label="Contacto" href="/contacto" />
+      </nav>
     </div>
   );
 }
 
 // Sub-componente para los tramos
-function TramoActivo({
-  icon,
-  titulo,
-  desc,
-  done,
-  active,
-  last,
-}: TramoActivoProps) {
+function TramoActivo({ icon, titulo, desc, done, active }: TramoActivoProps) {
   return (
     <div className="relative z-10 pb-6 last:pb-0 flex gap-4">
       <div className="flex flex-col items-center mt-1">
         <div
-          className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm ${done ? "bg-slate-300" : active ? "bg-purple-500 animate-pulse" : "bg-slate-200"}`}
+          className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm ${
+            done
+              ? "bg-slate-300"
+              : active
+                ? "bg-purple-500 animate-pulse"
+                : "bg-slate-200"
+          }`}
         >
           <div className="w-2 h-2 bg-white rounded-full"></div>
         </div>
       </div>
       <div
-        className={`flex-1 p-3 rounded-xl border ${active ? "bg-purple-50 border-purple-200" : "bg-white border-slate-100 opacity-60"}`}
+        className={`flex-1 p-3 rounded-xl border ${
+          active
+            ? "bg-purple-50 border-purple-200"
+            : "bg-white border-slate-100 opacity-60"
+        }`}
       >
         <div className="flex items-center gap-2 mb-1">
           <div
-            className={`p-1.5 rounded-md ${active ? "bg-purple-100 text-purple-700" : "bg-slate-100 text-slate-500"}`}
+            className={`p-1.5 rounded-md ${
+              active
+                ? "bg-purple-100 text-purple-700"
+                : "bg-slate-100 text-slate-500"
+            }`}
           >
             {icon}
           </div>
           <span
-            className={`text-xs font-bold ${active ? "text-purple-900" : "text-slate-600"}`}
+            className={`text-xs font-bold ${
+              active ? "text-purple-900" : "text-slate-600"
+            }`}
           >
             {titulo}
           </span>
@@ -236,5 +266,23 @@ function TramoActivo({
         <p className="text-[11px] text-slate-500 ml-8">{desc}</p>
       </div>
     </div>
+  );
+}
+
+// Sub-componente de navegación inferior
+function NavItem({ icon, label, href, active = false }: NavItemProps) {
+  const pathname = usePathname();
+  const isActive = pathname === href || active;
+
+  return (
+    <Link
+      href={href}
+      className={`flex flex-col items-center gap-1 transition-colors ${
+        isActive ? "text-sky-600" : "text-slate-400 hover:text-slate-600"
+      }`}
+    >
+      <div className="w-5 h-5">{icon}</div>
+      <span className="text-[10px] font-bold">{label}</span>
+    </Link>
   );
 }

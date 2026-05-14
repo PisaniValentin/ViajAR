@@ -13,6 +13,7 @@ import {
   Construction,
   Hammer,
   TriangleAlert,
+  Search,
 } from "lucide-react";
 
 // --- INTERFACES ---
@@ -74,9 +75,10 @@ export default function FavoritosPage() {
       </main>
 
       {/* NAV BAR INFERIOR */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
         <NavItem icon={<Home />} label="Inicio" href="/" />
-        <NavItem icon={<Route />} label="Mis rutas" href="/mis_rutas" />
+        <NavItem icon={<Search />} label="Buscar" href="/buscar" />
+        <NavItem icon={<Route />} label="Mis Viajes" href="/mis_viajes" />
         <NavItem icon={<Heart />} label="Favoritos" href="/favoritos" />
         <NavItem icon={<User />} label="Contacto" href="/contacto" />
       </nav>

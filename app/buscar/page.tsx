@@ -12,7 +12,6 @@ import {
   Clock,
   Wallet,
   Zap,
-  ChevronRight,
   Home,
   Route,
   Heart,
@@ -49,7 +48,6 @@ interface MockDatabase {
 }
 
 // --- DATOS SIMULADOS (POOL DE NODOS Y ARCOS) ---
-// Fijate que ahora los íconos ya traen su clase "w-4 h-4" directamente.
 const mockGraph: MockDatabase = {
   "BHI-BRC": {
     cheapest: {
@@ -133,7 +131,6 @@ export default function DemoCalculoRutas() {
     setIsLoading(true);
     setResults(null);
 
-    // Simulamos el tiempo de procesamiento del algoritmo del grafo
     setTimeout(() => {
       const routeKey = `${origin}-${destination}`;
       if (mockGraph[routeKey]) {
@@ -146,7 +143,7 @@ export default function DemoCalculoRutas() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-50 min-h-screen pb-24 font-sans text-slate-800">
+    <div className=" bg-gray-50 min-h-screen pb-24 font-sans text-slate-800">
       {/* HEADER */}
       <header className="flex justify-between items-center p-4 bg-white shadow-sm relative z-20">
         <Menu className="w-6 h-6 text-slate-600" />
@@ -160,13 +157,12 @@ export default function DemoCalculoRutas() {
       </header>
 
       <main className="p-4 space-y-6">
-        {/* CARD DE BÚSQUEDA (INPUTS) */}
+        {/* CARD DE BÚSQUEDA */}
         <section className="bg-white rounded-2xl shadow-sm p-5 border border-slate-200">
           <h2 className="text-sm font-bold text-slate-800 mb-4">
             Simulador de Rutas
           </h2>
           <div className="space-y-3 relative">
-            {/* Selector Origen */}
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold text-slate-400 uppercase">
                 Nodo de Origen
@@ -184,10 +180,8 @@ export default function DemoCalculoRutas() {
               </div>
             </div>
 
-            {/* Conector Visual */}
             <div className="absolute left-8 top-[60px] bottom-[60px] w-0.5 bg-slate-200 z-0 hidden sm:block"></div>
 
-            {/* Selector Destino */}
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-bold text-slate-400 uppercase">
                 Nodo de Destino
@@ -219,31 +213,34 @@ export default function DemoCalculoRutas() {
         {/* RESULTADOS DEL GRAFO */}
         {results && (
           <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Camino Más Barato */}
+            {/* Camino Más Barato (Desactivado) */}
             <RouteResultCard
               title="Camino más barato"
               badge="Menor costo"
               badgeColor="bg-emerald-100 text-emerald-700"
               iconTitle={<Wallet className="w-4 h-4 text-emerald-600" />}
               data={results.cheapest}
+              isDisabled={true} // <-- Pasamos la prop para desactivarlo
             />
 
-            {/* Camino Más Rápido */}
+            {/* Camino Más Rápido (Activado) */}
             <RouteResultCard
               title="Camino más rápido"
               badge="Menor tiempo"
               badgeColor="bg-purple-100 text-purple-700"
               iconTitle={<Zap className="w-4 h-4 text-purple-600" />}
               data={results.fastest}
+              isDisabled={false} // <-- Pasamos la prop para activarlo
             />
           </section>
         )}
       </main>
 
       {/* NAV BAR INFERIOR */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t flex justify-around py-3 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
         <NavItem icon={<Home />} label="Inicio" href="/" />
-        <NavItem icon={<Route />} label="Demo" href="/demo" active />
+        <NavItem icon={<Search />} label="Buscar" href="/buscar" />
+        <NavItem icon={<Route />} label="Mis Viajes" href="/mis_viajes" />
         <NavItem icon={<Heart />} label="Favoritos" href="/favoritos" />
         <NavItem icon={<User />} label="Contacto" href="/contacto" />
       </nav>
@@ -259,15 +256,17 @@ function RouteResultCard({
   badgeColor,
   iconTitle,
   data,
+  isDisabled = false, // <-- Nueva prop para manejar el estado del botón
 }: {
   title: string;
   badge: string;
   badgeColor: string;
   iconTitle: React.ReactNode;
   data: RoutePath;
+  isDisabled?: boolean;
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
       {/* Cabecera del resultado */}
       <div className="p-4 border-b border-slate-100 bg-slate-50/50">
         <div className="flex justify-between items-center mb-3">
@@ -292,7 +291,7 @@ function RouteResultCard({
       </div>
 
       {/* Tramos / Arcos del Grafo */}
-      <div className="p-5">
+      <div className="p-5 pb-2">
         <div className="space-y-0 relative ml-2">
           {/* Línea conectora del grafo */}
           <div className="absolute left-[11px] top-2 bottom-6 w-0.5 bg-slate-200 z-0"></div>
@@ -305,7 +304,9 @@ function RouteResultCard({
                   {/* Nodo Visual */}
                   <div className="flex flex-col items-center mt-1">
                     <div
-                      className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm ${isLast ? "bg-emerald-500" : "bg-sky-500"}`}
+                      className={`w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm ${
+                        isLast ? "bg-emerald-500" : "bg-sky-500"
+                      }`}
                     >
                       <div className="w-2 h-2 bg-white rounded-full"></div>
                     </div>
@@ -315,7 +316,6 @@ function RouteResultCard({
                   <div className="flex-1 bg-white border border-slate-100 p-3 rounded-xl shadow-sm">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-2">
-                        {/* Renderizado simple y seguro del ícono */}
                         <div className="p-1.5 bg-slate-100 text-slate-600 rounded-md">
                           {edge.icon}
                         </div>
@@ -348,6 +348,25 @@ function RouteResultCard({
             );
           })}
         </div>
+      </div>
+
+      {/* FOOTER DE LA CARD - BOTÓN DE SELECCIÓN */}
+      <div className="p-4 flex justify-end  pt-2 border-t border-slate-50 mt-2">
+        {isDisabled ? (
+          <button
+            disabled
+            className="w-1/2 bg-slate-100 text-slate-400 font-bold py-3.5 rounded-xl cursor-not-allowed text-sm transition-colors"
+          >
+            No disponible en esta demo
+          </button>
+        ) : (
+          <Link
+            href="/mis_viajes"
+            className="w-1/2 bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 rounded-xl text-sm flex justify-center items-center transition-all active:scale-[0.98] shadow-md shadow-sky-500/20"
+          >
+            Seleccionar camino
+          </Link>
+        )}
       </div>
     </div>
   );
