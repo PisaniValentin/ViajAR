@@ -47,23 +47,23 @@ interface MockDatabase {
   };
 }
 
-// --- DATOS SIMULADOS (POOL DE NODOS Y ARCOS) ---
+// --- DATOS SIMULADOS (POOL DE NODOS Y ARCOS ACTUALIZADOS) ---
 const mockGraph: MockDatabase = {
   "BHI-BRC": {
     cheapest: {
       type: "cheapest",
-      totalCost: "$ 45.800",
-      totalTime: "14h 30m",
+      totalCost: "$ 105.584,21",
+      totalTime: "16h 15m",
       edges: [
         {
           id: "e1",
-          transportType: "Colectivo Local",
+          transportType: "Colectivo Local (Bahía)",
           icon: <Bus className="w-4 h-4" />,
           originNode: "Tu ubicación (Centro)",
           destinationNode: "Terminal de Ómnibus BHI",
-          cost: 800,
-          costLabel: "$ 800",
-          timeLabel: "30m",
+          cost: 1838.5,
+          costLabel: "$ 1.838,50",
+          timeLabel: "20m",
         },
         {
           id: "e2",
@@ -71,46 +71,56 @@ const mockGraph: MockDatabase = {
           icon: <Bus className="w-4 h-4" />,
           originNode: "Terminal de Ómnibus BHI",
           destinationNode: "Terminal Bariloche",
-          cost: 45000,
-          costLabel: "$ 45.000",
-          timeLabel: "14h 0m",
+          cost: 101700,
+          costLabel: "$ 101.700",
+          timeLabel: "15h 25m",
+        },
+        {
+          id: "e3",
+          transportType: "Colectivo Local (BRC)",
+          icon: <Bus className="w-4 h-4" />,
+          originNode: "Terminal Bariloche",
+          destinationNode: "Centro Cívico",
+          cost: 2045.71,
+          costLabel: "$ 2.045,71",
+          timeLabel: "30m",
         },
       ],
     },
     fastest: {
       type: "fastest",
-      totalCost: "$ 128.500",
-      totalTime: "3h 45m",
+      totalCost: "$ 224.724",
+      totalTime: "1h 37m",
       edges: [
         {
-          id: "e3",
-          transportType: "Uber / Cabify",
+          id: "e4",
+          transportType: "Uber",
           icon: <Car className="w-4 h-4" />,
           originNode: "Tu ubicación (Centro)",
           destinationNode: "Aeropuerto Espora (BHI)",
-          cost: 4500,
-          costLabel: "$ 4.500",
-          timeLabel: "20m",
+          cost: 4191,
+          costLabel: "$ 4.191",
+          timeLabel: "9m",
         },
         {
-          id: "e4",
+          id: "e5",
           transportType: "Vuelo Directo",
           icon: <Plane className="w-4 h-4" />,
           originNode: "Aeropuerto Espora (BHI)",
           destinationNode: "Aeropuerto BRC",
-          cost: 115000,
-          costLabel: "$ 115.000",
-          timeLabel: "1h 45m",
+          cost: 215533,
+          costLabel: "$ 215.533",
+          timeLabel: "1h 15m",
         },
         {
-          id: "e5",
-          transportType: "Taxi",
+          id: "e6",
+          transportType: "Uber",
           icon: <Car className="w-4 h-4" />,
           originNode: "Aeropuerto BRC",
           destinationNode: "Centro Cívico",
-          cost: 9000,
-          costLabel: "$ 9.000",
-          timeLabel: "40m",
+          cost: 5000,
+          costLabel: "$ 5.000",
+          timeLabel: "13m",
         },
       ],
     },
@@ -215,12 +225,12 @@ export default function DemoCalculoRutas() {
           <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Camino Más Barato (Desactivado) */}
             <RouteResultCard
-              title="Camino más barato"
+              title="Camino más económico"
               badge="Menor costo"
               badgeColor="bg-emerald-100 text-emerald-700"
               iconTitle={<Wallet className="w-4 h-4 text-emerald-600" />}
               data={results.cheapest}
-              isDisabled={true} // <-- Pasamos la prop para desactivarlo
+              isDisabled={true}
             />
 
             {/* Camino Más Rápido (Activado) */}
@@ -230,7 +240,7 @@ export default function DemoCalculoRutas() {
               badgeColor="bg-purple-100 text-purple-700"
               iconTitle={<Zap className="w-4 h-4 text-purple-600" />}
               data={results.fastest}
-              isDisabled={false} // <-- Pasamos la prop para activarlo
+              isDisabled={false}
             />
           </section>
         )}
@@ -256,7 +266,7 @@ function RouteResultCard({
   badgeColor,
   iconTitle,
   data,
-  isDisabled = false, // <-- Nueva prop para manejar el estado del botón
+  isDisabled = false,
 }: {
   title: string;
   badge: string;
@@ -351,7 +361,7 @@ function RouteResultCard({
       </div>
 
       {/* FOOTER DE LA CARD - BOTÓN DE SELECCIÓN */}
-      <div className="p-4 flex justify-end  pt-2 border-t border-slate-50 mt-2">
+      <div className="p-4 flex justify-end pt-2 border-t border-slate-50 mt-2">
         {isDisabled ? (
           <button
             disabled

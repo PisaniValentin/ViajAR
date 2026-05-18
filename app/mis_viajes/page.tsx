@@ -91,28 +91,30 @@ export default function ViajeActivoPage() {
                 Camino más rápido
               </h2>
             </div>
-            <span className="font-black text-lg text-slate-900">$ 128.500</span>
+            {/* COSTO TOTAL ACTUALIZADO */}
+            <span className="font-black text-lg text-slate-900">$ 224.724</span>
           </div>
 
           <div className="p-5 relative ml-2">
             <div className="absolute left-[11px] top-2 bottom-6 w-0.5 bg-slate-200"></div>
 
+            {/* TRAMOS ACTUALIZADOS */}
             <TramoActivo
               icon={<Car className="w-4 h-4" />}
-              titulo="Uber / Cabify"
-              desc="Hacia Aeropuerto Espora (BHI)"
+              titulo="Uber (Bahía a Terminal)"
+              desc="$4.191 • Duración: 9 min"
               done
             />
             <TramoActivo
               icon={<Plane className="w-4 h-4" />}
-              titulo="Vuelo Directo"
-              desc="Hacia Aeropuerto BRC"
+              titulo="Vuelo Bahía - Bariloche"
+              desc="$215.533 • Duración: 1 h 15 min"
               done
             />
             <TramoActivo
               icon={<Car className="w-4 h-4" />}
-              titulo="Taxi"
-              desc="Hacia Centro Cívico"
+              titulo="Uber (Bariloche)"
+              desc="$5.000 • Duración: 13 min"
               active
             />
           </div>
